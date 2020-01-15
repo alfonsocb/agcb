@@ -1,0 +1,40 @@
+
+/* Program written by Alfonso Gabriel Carpio Benitez on Jan 13, 2020 at 9:09PM
+ *  Blink Pins: 13,12
+ *  Fade Pins: 11
+ */
+
+
+int led = 11; //setting led as data = 11
+int brightness = 0; // setting brightness as data  = 0
+int fadeAmount = 50; // setting fadeAmount as data = 50
+void setup() {
+  pinMode(13, OUTPUT); 
+  pinMode(12, OUTPUT);
+  pinMode(led, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(13,LOW); // turn light ON
+  delay(1000); //delay for 100ms
+  digitalWrite(13,HIGH); //turn light OFF
+  delay(100);
+  digitalWrite(13,HIGH);
+  delay(300);
+  digitalWrite(13,HIGH);
+  delay(150);
+  digitalWrite(12,HIGH); // turn light ON for Pin 12
+  delay(200); // delay for 200ms
+  digitalWrite(12,LOW); // turn light OFF for Pin 12
+  delay(1000);
+  digitalWrite(12,HIGH);
+  delay(200);
+  digitalWrite(12,HIGH);
+  delay(150);
+  analogWrite(led,brightness); // calling led and brightness (11, 0)
+  brightness = brightness + fadeAmount; // setting default brightness to 50
+  if (brightness <= 0 || brightness >= 200) { //increases brightness until brightness >=200
+    fadeAmount = -fadeAmount;// when brightness reaches >= 200 will -fadeAmount decreasing by 50
+  }
+  delay (10);//delay for 10ms
+}
