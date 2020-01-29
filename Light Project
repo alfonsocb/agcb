@@ -1,0 +1,43 @@
+/* 
+ *  Program written by Alfonso Gabriel Carpio Benitez on Jan 13, 2020 at 9:09PM
+ *  Fade Pins: 11, 10
+ *  Use colors: blue - red or yellow - green (as long as they contrast)  
+ *  
+ */
+
+int blue = 11;   // declaring blue as pin 11
+int red =  10;   // declaring red as pin 10
+//made blue and red  as integers to know which led goes into which socket <-- keep in mind blue HAS to be the dominant color for this
+
+int brightnessred = 0; // sets red's brightness to 0
+int brightnessblue = 100; // sets blue's brightness to 100, making it the more dominant of the two
+
+int fadeAmount1 = 5; //fade amt for red
+int fadeAmount2 = 5; // fade amt for blue
+// how many points to fade the LED by 
+
+void setup() {
+  pinMode(blue, OUTPUT); // declaring pin 11 as an output
+  pinMode(red, OUTPUT);  // declaring pin 10 as an output
+}
+
+void loop() {
+  analogWrite(blue, brightnessblue); // declaring pin and the level of brightness for blue 
+  analogWrite(red, brightnessred); // declaring pin and the level of brightness for red
+  brightnessred = brightnessred + fadeAmount1; // setting the brightness of red
+  brightnessblue = brightnessblue + fadeAmount2; // setting the brightness of blue 
+ 
+  // below code was inspired and modified as required from Programming Electronics Academy and the Arduino code for FADE
+  //
+  //https://www.youtube.com/watch?v=-apGA_8SmxY
+  //
+  
+  if (brightnessred <= 0 || brightnessred >= 200) { // increases brightness until 200, then decreases based on -fadeAmount -(5) 
+    fadeAmount1 = -fadeAmount1; // allows fadeAmount1 to have a negative (-fadeAmount1) 
+  } 
+  else if (brightnessblue == 0 || brightnessblue == 255) // increases brightness until 200, then decreases based on -fadeAmount -(5)
+  {
+    fadeAmount2 = -fadeAmount2; // allows fadeAmount1 to have a negative (-fadeAmount1)
+  }
+  delay(100);// delay between fadeAmounts
+}
