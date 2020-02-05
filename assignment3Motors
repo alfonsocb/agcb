@@ -1,0 +1,51 @@
+/*  Program written by Alfonso Gabriel Carpio Benitez on 4 Feb 2020 at 8:56 PM
+ *  Pins in Use
+ *  Servo Motor: 6 
+ *  Button: 10
+ *  DC Motor: 11,12
+ */
+#include <Servo.h> // Include library
+Servo myservo; // Make new servo object
+
+int pos = 0; // starting position
+
+void setup() {
+  
+  // Servo Motor //
+  myservo.attach(6); // attaches the Servo Motor (SM) on pin 6
+  
+  // DC Motor //
+  pinMode (12, OUTPUT); // DC Motor #1
+  pinMode (11, OUTPUT); // DC Motor #2
+  
+  // Button //
+  pinMode (10, INPUT); // Pin used for the button
+}
+
+void loop() {
+  if (digitalRead(10) == HIGH) { // if the button is pressed 
+    
+  // DC Motor response
+  digitalWrite (11, LOW); // pin 11 of the DC Motor is set to low
+  digitalWrite (12, LOW); // pin 12 of the DC Motor is set to low, this code shuts down the DC Motor
+  
+  // SM response 
+  for (pos = 0; pos <= 180; pos += 1) { // goes from 0 deg to 180 deg, increases in ticks of 1 
+    myservo.write(pos); // tell servo to go to position 
+    }
+  for (pos = 180; pos >= 0; pos -= 1) { // goes from 180 deg to 0 deg, 'decreases' in ticks of 1 
+    myservo.write(pos); // tell servo to go to position 
+    }
+    
+  } else {
+    
+  // DC Motor response when button is not pressed 
+  digitalWrite (11, LOW); // pin 11 of the DC Motor is set to low
+  digitalWrite (12, HIGH); //pin 12 of the DC Motor is set to high, this code makes the DC motor go backwards
+  
+  //Servo Motor response when the button is not pressed
+  for (pos = 0; pos == 0; pos = -1) { // this SM code stops the SM from moving 
+    myservo.write(pos); // tell servo to go to position
+    }
+  }
+}
