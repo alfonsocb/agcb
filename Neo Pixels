@@ -1,0 +1,116 @@
+/* 
+ *  Program written by Alfonso Gabriel Carpio Benitez on Mar 3, at 1:14 PM
+ *  Button Pin:2
+ *  Light Pin: 3
+ *  Use of NeoPixel strip 
+ *  Use of Adafruit code from their template in order to supplement basic knowledge, personal comments are marked --
+ */
+// NEOPIXEL BEST PRACTICES for most reliable operation:
+// - Add 1000 uF CAPACITOR between NeoPixel strip's + and - connections.
+// - MINIMIZE WIRING LENGTH between microcontroller board and first pixel.
+// - NeoPixel strip's DATA-IN should pass through a 300-500 OHM RESISTOR.
+// - AVOID connecting NeoPixels on a LIVE CIRCUIT. If you must, ALWAYS
+// connect GROUND (-) first, then +, then data.
+// - When using a 3.3V microcontroller with a 5V-powered NeoPixel strip,
+// a LOGIC-LEVEL CONVERTER on the data line is STRONGLY
+RECOMMENDED.
+// (Skipping these may work OK on your workbench but can fail in the field)
+#include <Adafruit_NeoPixel.h>
+#ifdef __AVR__
+ #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
+#endif
+// Which pin on the Arduino is connected to the NeoPixels?
+// On a Trinket or Gemma we suggest changing this to 1:
+#define LED_PIN 3
+// How many NeoPixels are attached to the Arduino?
+#define LED_COUNT 60
+// Declare our NeoPixel strip object:
+Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
+products)
+void setup() {
+ pinMode(2, OUTPUT);
+#if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
+ clock_prescale_set(clock_div_1);
+#endif
+ strip.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
+ strip.show(); // Turn OFF all pixels ASAP
+ strip.setBrightness(50); // Set BRIGHTNESS to about 1/5 (max = 255)
+}
+// loop() function -- runs repeatedly as long as board is on ---------------
+void loop() {
+ // Fill along the length of the strip in various colors...
+// colorWipe(strip.Color(255, 0, 255), 10); // Pink // Colour following is speed
+ if(digitalRead(2) == LOW){ ; // start of personal comments -- if button is not pressed 
+ colorWipe(strip.Color(255, 0, 255), 10); // this will create an idle rotation of the following colors: pink
+ colorWipe(strip.Color(255, 255, 0), 6); // and yellow
+ } else if (digitalRead (2) == HIGH) { // this elif statement shows means that if the button is pressed the below colors are activated
+ // each individual pixel was hardcoded to have a specific color due to an issue with random() 
+ strip.setPixelColor(0, strip.Color(255, 0, 0));
+ strip.show();
+ strip.setPixelColor(1, strip.Color(0, 255, 0));
+ strip.show();
+ strip.setPixelColor(2, strip.Color(0, 0, 255));
+ strip.show();
+ strip.setPixelColor(3, strip.Color(255, 0, 255));
+ strip.show();
+ strip.setPixelColor(4, strip.Color(255, 255, 0));
+ strip.show();
+ strip.setPixelColor(5, strip.Color(0, 255, 255));
+ strip.show();
+ strip.setPixelColor(6, strip.Color(255, 255, 255));
+ strip.show(); // end of personal comments --
+ }
+}
+
+void colorWipe(uint32_t color, int wait) {
+ for(int i=0; i<strip.numPixels(); i++) { // For each pixel in strip...
+ strip.setPixelColor(i, color); // Set pixel's color (in RAM)
+ strip.show(); // Update strip to match
+ delay(wait); // Pause for a moment
+ }
+}
+void theaterChase(uint32_t color, int wait) {
+ for(int a=0; a<10; a++) { // Repeat 10 times...
+ for(int b=0; b<3; b++) { // 'b' counts from 0 to 2...
+ strip.clear(); // Set all pixels in RAM to 0 (off)
+ // 'c' counts up from 'b' to end of strip in steps of 3...
+ for(int c=b; c<strip.numPixels(); c += 3) {
+ strip.setPixelColor(c, color); // Set pixel 'c' to value 'color'
+ }
+ strip.show(); // Update strip with new contents
+ delay(wait); // Pause for a moment
+ }
+ }
+}
+
+ for(long firstPixelHue = 0; firstPixelHue < 5*65536; firstPixelHue += 256) {
+ for(int i=0; i<strip.numPixels(); i++) {
+ int pixelHue = firstPixelHue + (i * 65536L / strip.numPixels());
+ strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(pixelHue)));
+ }
+ strip.show(); // Update strip with new contents
+ delay(wait); // Pause for a moment
+ }
+}
+// Rainbow-enhanced theater marquee. Pass delay time (in ms) between
+frames.
+void theaterChaseRainbow(int wait) {
+ int firstPixelHue = 0; // First pixel starts at red (hue 0)
+ for(int a=0; a<30; a++) { // Repeat 30 times...
+ for(int b=0; b<3; b++) { // 'b' counts from 0 to 2...
+ strip.clear(); // Set all pixels in RAM to 0 (off)
+ // 'c' counts up from 'b' to end of strip in increments of 3...
+ for(int c=b; c<strip.numPixels(); c += 3) {
+ // hue of pixel 'c' is offset by an amount to make one full
+ // revolution of the color wheel (range 65536) along the length
+ // of the strip (strip.numPixels() steps):
+ int hue = firstPixelHue + c * 65536L / strip.numPixels();
+ uint32_t color = strip.gamma32(strip.ColorHSV(hue)); // hue -> RGB
+ strip.setPixelColor(c, color); // Set pixel 'c' to value 'color'
+ }
+ strip.show(); // Update strip with new contents
+ delay(wait); // Pause for a moment
+ firstPixelHue += 65536 / 90; // One cycle of color wheel over 90 frames
+ }
+ }
+}
